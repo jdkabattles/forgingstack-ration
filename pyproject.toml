@@ -1,0 +1,22 @@
+# MCP server package for ForgingStack Ration (stdlib only).
+# The live REST API is a separate private service, not this package.
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "forgingstack-ration"
+version = "0.1.0"
+description = "One quota pool, many agents, no overruns."
+license = {text="MIT"}
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+
+[project.scripts]
+forgingstack-ration = "app.mcp_server:main"
+
+[tool.setuptools.packages.find]
+include = ["app*"]
