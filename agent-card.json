@@ -1,0 +1,97 @@
+{
+  "authentication": {
+    "description": "X-API-Key header. Sign up via POST /v1/signup (key shown once, 100 starter credits). Email verification is required before the key can create pools or draw.",
+    "schemes": [
+      "api-key"
+    ]
+  },
+  "description": "One quota pool, many agents, no overruns. A token-bucket pool with a refill rate, per-agent caps, and burst limits. Every draw, allowed or denied, gets a hash-chained receipt.",
+  "limits": [
+    "Draws are denied when units exceed the burst limit, the pool's available units, or the agent's allowed draws inside the rolling 60-minute window would exceed the per-agent cap.",
+    "Per-agent cap window is a rolling 60 minutes \u2014 a documented design choice, not a calendar window.",
+    "Not a payment system, not a rate limiter for HTTP, not a wisdom judgement."
+  ],
+  "name": "ForgingStack Ration",
+  "pricing": {
+    "idempotency_replay": 0,
+    "note": "1 credit per pool creation and 1 credit per draw call, allowed or denied \u2014 the draw was performed. Idempotent replays are free. Top-ups, pool reads, pool lists, and deletes are free.",
+    "per_draw_call": 1,
+    "per_pool_creation": 1,
+    "starter_credits": 100,
+    "unit": "credit"
+  },
+  "provider": {
+    "organization": "ForgingStack",
+    "url": "https://forgingstack.com/"
+  },
+  "skills": [
+    {
+      "description": "Create a token-bucket quota pool: capacity, refill per minute, per-agent cap, burst limit.",
+      "id": "create_pool",
+      "input": [
+        "name",
+        "capacity_units",
+        "refill_units_per_minute",
+        "per_agent_cap_units",
+        "burst_units"
+      ],
+      "name": "Create pool",
+      "output": [
+        "id",
+        "available_units",
+        "credits_remaining"
+      ]
+    },
+    {
+      "description": "Draw units from a pool for one agent. Returns allowed or denied, a reason, and a receipt.",
+      "id": "draw",
+      "input": [
+        "pool_id",
+        "agent_id",
+        "units"
+      ],
+      "name": "Draw",
+      "output": [
+        "decision",
+        "reason",
+        "remaining_units",
+        "receipt_id",
+        "receipt_hash",
+        "credits_remaining"
+      ]
+    },
+    {
+      "description": "One pool by id, with current available units.",
+      "id": "get_pool",
+      "name": "Get pool"
+    },
+    {
+      "description": "All pools owned by the API key.",
+      "id": "list_pools",
+      "name": "List pools"
+    },
+    {
+      "description": "Add units to a pool, clamped at capacity. Free.",
+      "id": "topup_pool",
+      "name": "Top up pool"
+    },
+    {
+      "description": "Delete a pool and its draws.",
+      "id": "delete_pool",
+      "name": "Delete pool"
+    },
+    {
+      "description": "Remaining credit balance for the API key.",
+      "id": "get_credits",
+      "name": "Get credits"
+    },
+    {
+      "description": "A past draw receipt by id.",
+      "id": "get_receipt",
+      "name": "Get receipt"
+    }
+  ],
+  "status": "live",
+  "url": "https://forgingstack-ration.jkbattles.workers.dev",
+  "version": "0.1.0"
+}
