@@ -1,0 +1,36 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "description": "One quota pool, many agents, no overruns.",
+  "name": "io.github.jdkabattles/forgingstack-ration",
+  "packages": [
+    {
+      "environmentVariables": [
+        {
+          "default": "https://forgingstack-ration.jkbattles.workers.dev",
+          "description": "Ration API base URL. Live default.",
+          "isRequired": false,
+          "name": "FORGINGSTACK_API_BASE"
+        },
+        {
+          "description": "API key for Ration. Sign up via POST /v1/signup (key shown once).",
+          "isRequired": true,
+          "isSecret": true,
+          "name": "FORGINGSTACK_API_KEY"
+        }
+      ],
+      "identifier": "forgingstack-ration",
+      "registryType": "pypi",
+      "runtimeHint": "uvx",
+      "transport": {
+        "type": "stdio"
+      },
+      "version": "0.1.0"
+    }
+  ],
+  "repository": {
+    "source": "github",
+    "url": "https://github.com/jdkabattles/forgingstack-ration"
+  },
+  "title": "ForgingStack Ration",
+  "version": "0.1.0"
+}
