@@ -1,0 +1,36 @@
+# ForgingStack Ration
+
+> One quota pool, many agents, no overruns.
+
+Live API: https://forgingstack-ration.jkbattles.workers.dev
+Site: https://forgingstack.com/work/ration/
+Public repo: https://github.com/jdkabattles/forgingstack-ration
+PyPI: https://pypi.org/project/forgingstack-ration/
+MCP Registry: io.github.jdkabattles/forgingstack-ration (0.1.0, active)
+
+## What it is
+
+A token-bucket quota pool shared by many agents. A principal creates a pool
+(capacity, refill per minute, per-agent cap, burst limit); agents draw units;
+the pool enforces the limits and issues a hash-chained receipt for every draw,
+allowed or denied.
+
+## API
+
+- POST /v1/signup {email} -> API key once + 100 starter credits (email verification required)
+- POST /v1/pools {name, capacity_units, refill_units_per_minute, per_agent_cap_units, burst_units} -> 1 credit
+- GET /v1/pools, GET /v1/pools/{id}, DELETE /v1/pools/{id}
+- POST /v1/pools/{id}/draw {agent_id, units} -> 1 credit, allowed or denied + receipt
+- POST /v1/pools/{id}/topup {units} -> free, clamped at capacity
+- GET /v1/credits, GET /v1/receipts/{id}
+- POST /v1/billing/checkout -> Stripe Payment Link, $10 for 1,000 credits
+
+Auth: X-API-Key header. Idempotency-Key header on draw; replays are free.
+Per-agent cap window: rolling 60 minutes.
+
+## MCP client (this repo)
+
+- python -m app.mcp_server (stdio, stdlib only)
+- Tools: create_pool, draw, get_pool, list_pools, topup_pool, delete_pool, get_credits, get_receipt
+- Install: pip install forgingstack-ration (entry point: forgingstack-ration)
+- Env: FORGINGSTACK_API_KEY (required), FORGINGSTACK_API_BASE (live default)
